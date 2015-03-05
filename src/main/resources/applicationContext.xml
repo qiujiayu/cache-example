@@ -65,7 +65,7 @@
       <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
     </property>
   </bean>
-  <aop:aspectj-autoproxy proxy-target-class="true" />
+  
   <bean id="cachePointCut" class="com.jarvis.cache.redis.CachePointCut" destroy-method="destroy">
     <constructor-arg value="10" /><!-- 线程数量 -->
     <constructor-arg value="20000" /><!-- 自动加载队列容量 -->
