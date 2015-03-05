@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+   http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-3.0.xsd
+   http://www.springframework.org/schema/aop classpath:/org/springframework/aop/config/spring-aop-3.0.xsd
+   http://www.springframework.org/schema/tx classpath:/org/springframework/transaction/config/spring-tx-3.0.xsd">
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:module.properties</value>
+      </list>
+    </property>
+  </bean>
+  <!-- Jedis 连接池配置 -->
+  <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+    <property name="maxTotal" value="300" />
+    <property name="maxIdle" value="100" />
+    <property name="maxWaitMillis" value="1000" />
+    <property name="testOnBorrow" value="false" />
+  </bean>
+  <!-- Jedis ConnectionFactory 数据库连接配置 -->
+  <bean id="jedisConnectionFactory100" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <property name="hostName" value="${redis100.host}" />
+    <property name="port" value="${redis100.port}" />
+    <property name="password" value="" />
+    <property name="poolConfig" ref="jedisPoolConfig" />
+  </bean>
+  <bean id="jedisConnectionFactory2" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <property name="hostName" value="${redis2.host}" />
+    <property name="port" value="${redis2.port}" />
+    <property name="password" value="" />
+    <property name="poolConfig" ref="jedisPoolConfig" />
+  </bean>
+  <!-- redisTemplate配置，redisTemplate是对Jedis的对redis操作的扩展，有更多的操作，封装使操作更便捷 -->
+  <bean id="redisTemplate100" class="org.springframework.data.redis.core.RedisTemplate">
+    <property name="connectionFactory" ref="jedisConnectionFactory100" />
+    <property name="keySerializer">
+      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+    </property>
+    <property name="hashKeySerializer">
+      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+    </property>
+    <property name="valueSerializer">
+      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+    </property>
+    <property name="hashValueSerializer">
+      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+    </property>
+  </bean>
+  <bean id="redisTemplate2" class="org.springframework.data.redis.core.RedisTemplate">
+    <property name="connectionFactory" ref="jedisConnectionFactory2" />
+    <property name="keySerializer">
+      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+    </property>
+    <property name="hashKeySerializer">
+      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+    </property>
+    <property name="valueSerializer">
+      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+    </property>
+    <property name="hashValueSerializer">
+      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+    </property>
+  </bean>
+  <aop:aspectj-autoproxy proxy-target-class="true" />
+  <bean id="cachePointCut" class="com.jarvis.cache.redis.CachePointCut" destroy-method="destroy">
+    <constructor-arg value="10" /><!-- 线程数量 -->
+    <constructor-arg value="20000" /><!-- 自动加载队列容量 -->
+    <property name="redisTemplateList">
+      <list>
+        <ref bean="redisTemplate100" />
+        <ref bean="redisTemplate2" />
+      </list>
+    </property>
+  </bean>
+  <aop:config>
+    <aop:aspect id="aa" ref="cachePointCut">
+      <aop:pointcut id="daoCachePointcut"
+        expression="execution(public !void com.jarvis.cache_example.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
+      <aop:around pointcut-ref="daoCachePointcut" method="controllerPointCut" />
+    </aop:aspect>
+  </aop:config>
+  <bean id="userDAO" class="com.jarvis.cache_example.dao.UserDAO" />
+</beans>
