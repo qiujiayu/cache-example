@@ -66,9 +66,14 @@
     </property>
   </bean>
   
+  <bean id="autoLoadConfig" class="com.jarvis.cache.to.AutoLoadConfig">
+    <property name="threadCnt" value="10" />
+    <property name="maxElement" value="20000" />
+    <property name="printSlowLog" value="true" />
+    <property name="slowLoadTime" value="1000" />
+  </bean>
   <bean id="cachePointCut" class="com.jarvis.cache.redis.CachePointCut" destroy-method="destroy">
-    <constructor-arg value="10" /><!-- 线程数量 -->
-    <constructor-arg value="20000" /><!-- 自动加载队列容量 -->
+    <constructor-arg ref="autoLoadConfig" />
     <property name="redisTemplateList">
       <list>
         <ref bean="redisTemplate100" />

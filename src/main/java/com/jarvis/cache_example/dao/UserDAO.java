@@ -6,7 +6,7 @@ import com.jarvis.cache_example.to.UserTO;
 
 public class UserDAO {
     
-    @Cache(expire=600, autoload=true, key="'user'+#args[0]")
+    @Cache(expire=600, autoload=true, key="'user'+#args[0]", condition="#args[0]>0")
     public UserTO getUserById(Integer id){
         UserTO user=new UserTO();
         user.setId(id);
