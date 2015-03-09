@@ -71,6 +71,7 @@
     <property name="maxElement" value="20000" />
     <property name="printSlowLog" value="true" />
     <property name="slowLoadTime" value="1000" />
+    <property name="sortType" value="1" />
   </bean>
   <bean id="cachePointCut" class="com.jarvis.cache.redis.CachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
