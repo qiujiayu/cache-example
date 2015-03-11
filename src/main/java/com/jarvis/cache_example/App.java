@@ -2,8 +2,8 @@ package com.jarvis.cache_example;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.jarvis.cache_example.dao.UserDAO;
-import com.jarvis.cache_example.to.UserTO;
+import com.jarvis.cache_example.common.dao.UserDAO;
+import com.jarvis.cache_example.common.to.UserTO;
 
 /**
  * Hello world!

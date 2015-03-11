@@ -1,7 +1,7 @@
-package com.jarvis.cache_example.dao;
+package com.jarvis.cache_example.common.dao;
 
 import com.jarvis.cache.annotation.Cache;
-import com.jarvis.cache_example.to.UserTO;
+import com.jarvis.cache_example.common.to.UserTO;
 
 
 public class UserDAO {

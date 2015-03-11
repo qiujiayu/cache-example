@@ -7,6 +7,8 @@
    http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-3.0.xsd
    http://www.springframework.org/schema/aop classpath:/org/springframework/aop/config/spring-aop-3.0.xsd
    http://www.springframework.org/schema/tx classpath:/org/springframework/transaction/config/spring-tx-3.0.xsd">
+  <context:annotation-config />
+  <context:component-scan base-package="com.jarvis.cache_example.common" />  <!-- 自动扫描所有注解该路径 -->
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list>
@@ -83,11 +85,11 @@
     </property>
   </bean>
   <aop:config>
-    <aop:aspect id="aa" ref="cachePointCut">
+    <aop:aspect ref="cachePointCut">
       <aop:pointcut id="daoCachePointcut"
-        expression="execution(public !void com.jarvis.cache_example.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
-      <aop:around pointcut-ref="daoCachePointcut" method="controllerPointCut" />
+        expression="execution(public !void com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
+      <aop:around pointcut-ref="daoCachePointcut" method="proceed" />
     </aop:aspect>
   </aop:config>
-  <bean id="userDAO" class="com.jarvis.cache_example.dao.UserDAO" />
+  <bean id="userDAO" class="com.jarvis.cache_example.common.dao.UserDAO" />
 </beans>
