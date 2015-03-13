@@ -1,6 +1,7 @@
 package com.jarvis.cache_example.common.dao;
 
 import com.jarvis.cache.annotation.Cache;
+import com.jarvis.cache.annotation.CacheDelete;
 import com.jarvis.cache_example.common.to.UserTO;
 
 
@@ -13,5 +14,11 @@ public class UserDAO {
         user.setName("name"+id);
         System.out.println("getUserById from dao");
         return user;
+    }
+    
+    @CacheDelete({"'user'+#args[0].id"})
+    public void updateUserName(UserTO user){
+        System.out.println("update user name:"+user.getName());
+        // save to db
     }
 }

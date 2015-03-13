@@ -13,6 +13,7 @@
     userName:${user.name}
     
     <br/>
+    <a href="updateuser.html">删除缓存</a>
     <br/>
     <a href="cacheadmin" target="_blank">缓存管理后台</a>
   </body>

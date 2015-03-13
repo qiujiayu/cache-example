@@ -5,4 +5,6 @@ import com.jarvis.cache_example.common.to.UserTO;
 
 public interface UserService {
     UserTO getUserById(Integer id);
+
+    void updateUser(UserTO user);
 }

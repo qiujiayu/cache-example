@@ -22,4 +22,12 @@ public class IndexController {
         request.setAttribute("user", user);
         return new ModelAndView("/index");
     }
+    
+    @RequestMapping("/updateuser.html")
+    public ModelAndView updateUser(HttpServletRequest request, HttpServletResponse response){
+        int id=100;
+        UserTO user=userService.getUserById(id);
+        userService.updateUser(user);
+        return index(request, response);
+    }
 }

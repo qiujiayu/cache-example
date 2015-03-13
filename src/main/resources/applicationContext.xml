@@ -90,6 +90,11 @@
         expression="execution(public !void com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
       <aop:around pointcut-ref="daoCachePointcut" method="proceed" />
     </aop:aspect>
+    <aop:aspect ref="cachePointCut" order="1000">
+      <aop:pointcut id="deleteCachePointcut"
+        expression="execution(* com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cacheDelete)" />
+      <aop:after pointcut-ref="deleteCachePointcut" method="deleteCache" />
+    </aop:aspect>
   </aop:config>
   <bean id="userDAO" class="com.jarvis.cache_example.common.dao.UserDAO" />
 </beans>
