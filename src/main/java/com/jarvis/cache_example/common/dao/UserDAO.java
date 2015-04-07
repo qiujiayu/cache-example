@@ -21,4 +21,10 @@ public class UserDAO {
         System.out.println("update user name:"+user.getName());
         // save to db
     }
+    
+    @CacheDelete({"user*"})// 注意：因为没有用 SpEL表达式，所以不需要用单引号
+    public void clearUserCache(){
+        System.out.println("clearUserCache");
+        // save to db
+    }
 }

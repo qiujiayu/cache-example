@@ -18,71 +18,48 @@
   </bean>
   <!-- Jedis 连接池配置 -->
   <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-    <property name="maxTotal" value="300" />
-    <property name="maxIdle" value="100" />
-    <property name="maxWaitMillis" value="1000" />
+    <property name="maxTotal" value="1000" />
+    <property name="maxIdle" value="10" />
+    <property name="minIdle" value="5" />
+    <property name="maxWaitMillis" value="2000" />
     <property name="testOnBorrow" value="false" />
+    <property name="testOnReturn" value="false" />
+    <property name="testWhileIdle" value="false" />
   </bean>
-  <!-- Jedis ConnectionFactory 数据库连接配置 -->
-  <bean id="jedisConnectionFactory100" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-    <property name="hostName" value="${redis100.host}" />
-    <property name="port" value="${redis100.port}" />
-    <property name="password" value="" />
-    <property name="poolConfig" ref="jedisPoolConfig" />
-  </bean>
-  <bean id="jedisConnectionFactory2" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-    <property name="hostName" value="${redis2.host}" />
-    <property name="port" value="${redis2.port}" />
-    <property name="password" value="" />
-    <property name="poolConfig" ref="jedisPoolConfig" />
-  </bean>
-  <!-- redisTemplate配置，redisTemplate是对Jedis的对redis操作的扩展，有更多的操作，封装使操作更便捷 -->
-  <bean id="redisTemplate100" class="org.springframework.data.redis.core.RedisTemplate">
-    <property name="connectionFactory" ref="jedisConnectionFactory100" />
-    <property name="keySerializer">
-      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-    </property>
-    <property name="hashKeySerializer">
-      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-    </property>
-    <property name="valueSerializer">
-      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
-    </property>
-    <property name="hashValueSerializer">
-      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
-    </property>
-  </bean>
-  <bean id="redisTemplate2" class="org.springframework.data.redis.core.RedisTemplate">
-    <property name="connectionFactory" ref="jedisConnectionFactory2" />
-    <property name="keySerializer">
-      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-    </property>
-    <property name="hashKeySerializer">
-      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-    </property>
-    <property name="valueSerializer">
-      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
-    </property>
-    <property name="hashValueSerializer">
-      <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
-    </property>
+  <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+    <constructor-arg ref="jedisPoolConfig" />
+    <constructor-arg>
+      <list>
+        <bean class="redis.clients.jedis.JedisShardInfo">
+          <constructor-arg value="${redis1.host}" />
+          <constructor-arg type="int" value="${redis1.port}" />
+          <constructor-arg value="instance:01" />
+        </bean>
+        <bean class="redis.clients.jedis.JedisShardInfo">
+          <constructor-arg value="${redis2.host}" />
+          <constructor-arg type="int" value="${redis2.port}" />
+          <constructor-arg value="instance:02" />
+        </bean>
+        <bean class="redis.clients.jedis.JedisShardInfo">
+          <constructor-arg value="${redis3.host}" />
+          <constructor-arg type="int" value="${redis3.port}" />
+          <constructor-arg value="instance:03" />
+        </bean>
+      </list>
+    </constructor-arg>
   </bean>
   
   <bean id="autoLoadConfig" class="com.jarvis.cache.to.AutoLoadConfig">
     <property name="threadCnt" value="10" />
     <property name="maxElement" value="20000" />
     <property name="printSlowLog" value="true" />
-    <property name="slowLoadTime" value="1000" />
+    <property name="slowLoadTime" value="500" />
     <property name="sortType" value="1" />
+    <property name="checkFromCacheBeforeLoad" value="true" />
   </bean>
-  <bean id="cachePointCut" class="com.jarvis.cache.redis.CachePointCut" destroy-method="destroy">
+  <bean id="cachePointCut" class="com.jarvis.cache.redis.ShardedCachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
-    <property name="redisTemplateList">
-      <list>
-        <ref bean="redisTemplate100" />
-        <ref bean="redisTemplate2" />
-      </list>
-    </property>
+    <property name="shardedJedisPool" ref="shardedJedisPool" />
   </bean>
   <aop:config>
     <aop:aspect ref="cachePointCut">
@@ -90,7 +67,7 @@
         expression="execution(public !void com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
       <aop:around pointcut-ref="daoCachePointcut" method="proceed" />
     </aop:aspect>
-    <aop:aspect ref="cachePointCut" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存-->
+    <aop:aspect ref="cachePointCut" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
       <aop:pointcut id="deleteCachePointcut"
         expression="execution(* com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cacheDelete)" />
       <aop:after pointcut-ref="deleteCachePointcut" method="deleteCache" />
