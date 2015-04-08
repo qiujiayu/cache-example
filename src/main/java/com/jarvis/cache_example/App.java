@@ -23,7 +23,7 @@ public class App {
         init();
         System.out.println("Hello World!");
         final UserDAO userDAO=(UserDAO)context.getBean("userDAO");
-        Thread thread=new Thread(new Runnable() {
+        /*Thread thread=new Thread(new Runnable() {
 
             @Override
             public void run() {
@@ -53,6 +53,13 @@ public class App {
             }
 
         });
-        thread.start();
+        thread.start();*/
+        userDAO.getUserById2(100);
+        
+        UserTO user=new UserTO();
+        user.setId(100);
+        user.setName("name100");
+        userDAO.updateUserName2(user);
+        userDAO.clearUserCache2();
     }
 }
