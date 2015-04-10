@@ -70,7 +70,7 @@
     <aop:aspect ref="cachePointCut" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
       <aop:pointcut id="deleteCachePointcut"
         expression="execution(* com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cacheDelete)" />
-      <aop:after pointcut-ref="deleteCachePointcut" method="deleteCache" />
+      <aop:after-returning pointcut-ref="deleteCachePointcut" method="deleteCache" returning="retVal"/>
     </aop:aspect>
   </aop:config>
   <bean id="userDAO" class="com.jarvis.cache_example.common.dao.UserDAO" />
