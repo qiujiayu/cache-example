@@ -12,18 +12,33 @@ public class App {
 
     private static ClassPathXmlApplicationContext context;
 
+    private static UserDAO userDAO;
+
     /**
      * 初始化
      */
     private static void init() {
         context=new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});
+        userDAO=(UserDAO)context.getBean("userDAO");
     }
 
     public static void main(String[] args) {
         init();
         System.out.println("Hello World!");
-        final UserDAO userDAO=(UserDAO)context.getBean("userDAO");
-        /*Thread thread=new Thread(new Runnable() {
+
+        test3();
+
+    }
+    public static void test3(){
+        String userName="testUser";
+        UserTO user=userDAO.addUser(userName);
+        System.out.println(user.getId());
+        user=userDAO.getUserById(user.getId());
+        System.out.println(user.getId());
+    }
+
+    public static void test1() {
+        Thread thread=new Thread(new Runnable() {
 
             @Override
             public void run() {
@@ -44,8 +59,8 @@ public class App {
                     }
                 }
             }
-            
-            private void loadData(){
+
+            private void loadData() {
                 for(int i=1; i < 20; i++) {
                     UserTO to=userDAO.getUserById(i);
                     System.out.println(to.getName());
@@ -53,9 +68,12 @@ public class App {
             }
 
         });
-        thread.start();*/
+        thread.start();
+    }
+
+    public static void test2() {
         userDAO.getUserById2(100);
-        
+
         UserTO user=new UserTO();
         user.setId(100);
         user.setName("name100");
