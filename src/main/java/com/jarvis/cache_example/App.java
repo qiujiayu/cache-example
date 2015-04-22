@@ -26,7 +26,7 @@ public class App {
         init();
         System.out.println("Hello World!");
 
-        test3();
+        test2();
 
     }
     public static void test3(){
@@ -73,7 +73,6 @@ public class App {
 
     public static void test2() {
         userDAO.getUserById2(100);
-
         UserTO user=new UserTO();
         user.setId(100);
         user.setName("name100");
