@@ -60,6 +60,7 @@
   <bean id="cachePointCut" class="com.jarvis.cache.redis.ShardedCachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
     <property name="shardedJedisPool" ref="shardedJedisPool" />
+    <property name="namespace" value="test" />
   </bean>
   <aop:config>
     <aop:aspect ref="cachePointCut">
