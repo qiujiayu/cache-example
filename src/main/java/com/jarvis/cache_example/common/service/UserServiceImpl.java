@@ -8,9 +8,10 @@ import com.jarvis.cache_example.common.to.UserTO;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserDAO userDAO;
-    
+
     @Override
     public UserTO getUserById(Integer id) {
         return userDAO.getUserById(id);

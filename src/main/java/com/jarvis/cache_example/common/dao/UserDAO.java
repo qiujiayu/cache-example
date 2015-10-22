@@ -29,18 +29,18 @@ public class UserDAO {
         System.out.println("add User:" + id);
         return user;
     }
-    
+
     /**
      * 使用 hash 方法，将参数转为字符串
      * @param user
      * @return
      */
     @Cache(expire=600, key="'user'+$hash(#args)")
-    public List<UserTO> getUserList(UserTO user){
+    public List<UserTO> getUserList(UserTO user) {
         List<UserTO> list=new ArrayList<UserTO>();
         return list;
     }
-    
+
     /**
      * 使用自定义缓存Key，并在指定的条件下才进行缓存。
      * @param id

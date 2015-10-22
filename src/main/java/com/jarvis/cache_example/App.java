@@ -29,7 +29,8 @@ public class App {
         test2();
 
     }
-    public static void test3(){
+
+    public static void test3() {
         String userName="testUser";
         UserTO user=userDAO.addUser(userName);
         System.out.println(user.getId());

@@ -13,18 +13,20 @@ import com.jarvis.cache_example.common.to.UserTO;
 
 @Controller
 public class IndexController {
+
     @Autowired
     private UserService userService;
+
     @RequestMapping("/index.html")
-    public ModelAndView index(HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
         int id=100;
         UserTO user=userService.getUserById(id);
         request.setAttribute("user", user);
         return new ModelAndView("/index");
     }
-    
+
     @RequestMapping("/updateuser.html")
-    public ModelAndView updateUser(HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView updateUser(HttpServletRequest request, HttpServletResponse response) {
         int id=100;
         UserTO user=userService.getUserById(id);
         userService.updateUser(user);
