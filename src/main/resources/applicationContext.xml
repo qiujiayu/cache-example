@@ -57,11 +57,11 @@
     <property name="sortType" value="1" />
     <property name="checkFromCacheBeforeLoad" value="true" />
   </bean>
-  <bean id="kryoSerializer" class="com.jarvis.cache.serializer.KryoSerializer" />
+ 
   <bean id="hessianSerializer" class="com.jarvis.cache.serializer.HessianSerializer" />
   <bean id="cachePointCut" class="com.jarvis.cache.redis.ShardedCachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
-    <property name="serializer" ref="kryoSerializer" />
+    <property name="serializer" ref="hessianSerializer" />
     <property name="shardedJedisPool" ref="shardedJedisPool" />
     <property name="namespace" value="test" />
   </bean>
