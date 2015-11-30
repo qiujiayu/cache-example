@@ -1,5 +1,7 @@
 package com.jarvis.cache_example.common.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(UserTO user) {
         userDAO.updateUserName(user);
+    }
+
+    @Override
+    public List<UserTO> getUserList() {
+        return userDAO.getUserList(new UserTO());
     }
 
 }
