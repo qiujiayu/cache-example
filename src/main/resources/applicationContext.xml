@@ -56,6 +56,7 @@
     <property name="slowLoadTime" value="500" />
     <property name="sortType" value="1" />
     <property name="checkFromCacheBeforeLoad" value="true" />
+    <property name="autoLoadPeriod" value="50" />
   </bean>
  
   <bean id="hessianSerializer" class="com.jarvis.cache.serializer.HessianSerializer" />
@@ -65,7 +66,7 @@
     <property name="shardedJedisPool" ref="shardedJedisPool" />
     <property name="namespace" value="test" />
   </bean>
-  <aop:config>
+  <aop:config proxy-target-class="true">
     <aop:aspect ref="cachePointCut">
       <aop:pointcut id="daoCachePointcut"
         expression="execution(public !void com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
