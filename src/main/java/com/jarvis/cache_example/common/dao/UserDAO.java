@@ -7,7 +7,6 @@ import java.util.Random;
 import com.jarvis.cache.annotation.Cache;
 import com.jarvis.cache.annotation.CacheDelete;
 import com.jarvis.cache.annotation.CacheDeleteKey;
-import com.jarvis.cache.type.CacheKeyType;
 import com.jarvis.cache.type.CacheOpType;
 import com.jarvis.cache_example.common.to.UserTO;
 
@@ -55,14 +54,14 @@ public class UserDAO {
         return user;
     }
 
-    @CacheDelete({@CacheDeleteKey(value="'user'+#args[0].id", keyType=CacheKeyType.DEFINED)})
+    @CacheDelete({@CacheDeleteKey(value="'user'+#args[0].id")})
     public void updateUserName(UserTO user) {
         System.out.println("update user name:" + user.getName());
         // save to db
     }
 
     // 注意：因为没有用 SpEL表达式，所以不需要用单引号
-    @CacheDelete({@CacheDeleteKey(value="user*", keyType=CacheKeyType.DEFINED)})
+    @CacheDelete({@CacheDeleteKey(value="user*")})
     public void clearUserCache() {
         System.out.println("clearUserCache");
         // save to db
@@ -78,13 +77,13 @@ public class UserDAO {
         return user;
     }
 
-    @CacheDelete({@CacheDeleteKey(cls=UserDAO.class, method="getUserById2", argsEl={"#args[0].id"}, keyType=CacheKeyType.DEFAULT)})
+    @CacheDelete({@CacheDeleteKey(cls=UserDAO.class, method="getUserById2", argsEl={"#args[0].id"})})
     public void updateUserName2(UserTO user) {
         System.out.println("update user name:" + user.getName());
         // save to db
     }
 
-    @CacheDelete({@CacheDeleteKey(deleteByPrefixKey=true, cls=UserDAO.class, method="getUserById2", keyType=CacheKeyType.DEFAULT)})
+    @CacheDelete({@CacheDeleteKey(deleteByPrefixKey=true, cls=UserDAO.class, method="getUserById2")})
     public void clearUserCache2() {
         System.out.println("clearUserCache");
         // save to db
