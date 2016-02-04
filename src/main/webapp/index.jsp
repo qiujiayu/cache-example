@@ -11,7 +11,8 @@
   
   <body>
     userName:${user.name}
-    
+    <br/>
+    userName2:${user2.name}
     <br/>
     <a href="updateuser.html">删除缓存</a>
     <br/>

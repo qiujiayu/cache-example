@@ -45,7 +45,7 @@ public class UserDAO {
      * @param id
      * @return
      */
-    @Cache(expire=600, autoload=true, key="'user'+#args[0]", condition="#args[0]>0")
+    @Cache(expire=600, autoload=true, key="'user_dao_getUserById'+#args[0]", condition="#args[0]>0")
     public UserTO getUserById(Integer id) {
         UserTO user=new UserTO();
         user.setId(id);
@@ -68,7 +68,7 @@ public class UserDAO {
     }
 
     // ------------------------以下是使用默认生成Key的方法--------------------
-    @Cache(expire=600, autoload=true, condition="#args[0]>0")
+    @Cache(expire=600, key="'user_getUserById2'+#args[0]", autoload=true, condition="#args[0]>0")
     public UserTO getUserById2(Integer id) {
         UserTO user=new UserTO();
         user.setId(id);
@@ -76,18 +76,4 @@ public class UserDAO {
         System.out.println("getUserById from dao");
         return user;
     }
-
-    @CacheDelete({@CacheDeleteKey(cls=UserDAO.class, method="getUserById2", argsEl={"#args[0].id"})})
-    public void updateUserName2(UserTO user) {
-        System.out.println("update user name:" + user.getName());
-        // save to db
-    }
-
-    @CacheDelete({@CacheDeleteKey(deleteByPrefixKey=true, cls=UserDAO.class, method="getUserById2")})
-    public void clearUserCache2() {
-        System.out.println("clearUserCache");
-        // save to db
-    }
-
-    
 }

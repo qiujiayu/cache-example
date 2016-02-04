@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "classpath:org/apache/ibatis/builder/xml/mybatis-3-config.dtd">
+<configuration>
+  <settings>
+    <setting name="cacheEnabled" value="true" /><!-- 该配置影响的所有映射器中配置的缓存的全局开关。 -->
+    <setting name="defaultStatementTimeout" value="10" />
+  </settings>
+  <typeAliases>
+    <typeAlias alias="UserTO" type="com.jarvis.cache_example.common.to.UserTO" />
+    
+  </typeAliases>
+
+</configuration>

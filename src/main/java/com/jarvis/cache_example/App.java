@@ -77,10 +77,8 @@ public class App {
         UserTO user=new UserTO();
         user.setId(100);
         user.setName("name100");
-        userDAO.updateUserName2(user);
         userDAO.getUserById2(100);
         userDAO.getUserById2(100);
-        userDAO.clearUserCache2();
         userDAO.getUserById2(100);
         userDAO.getUserById2(100);
     }

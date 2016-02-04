@@ -22,6 +22,9 @@ public class IndexController {
         int id=100;
         UserTO user=userService.getUserById(id);
         request.setAttribute("user", user);
+        UserTO user2=userService.getUserById2(id);
+        request.setAttribute("user", user);
+        request.setAttribute("user2", user2);
         return new ModelAndView("/index");
     }
 

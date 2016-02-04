@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="
+   http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-3.0.xsd
+   http://www.springframework.org/schema/aop classpath:/org/springframework/aop/config/spring-aop-3.0.xsd
+   http://www.springframework.org/schema/tx classpath:/org/springframework/transaction/config/spring-tx-3.0.xsd">
+   
+  <!-- 加载 module.properties -->
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="classpath:module.properties"></property>
+  </bean>
+  
+  <bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+    <property name="alias" value="share" />
+    <property name="delegateProperties" value="user=${jdbc.username},password=${jdbc.password}" />
+    <property name="user" value="${jdbc.username}" />
+    <property name="password" value="${jdbc.password}" />
+    <property name="driver" value="${jdbc.driver}" />
+    <property name="driverUrl" value="${jdbc.url}" />
+    <!-- 最大激活连接数 -->
+    <property name="maximumConnectionCount" value="${jdbc.poolSize}" />
+    <!-- 默认激活的连接数 -->
+    <property name="minimumConnectionCount" value="${jdbc.initConnections}" />
+    <!-- 默认保持的有效连接数 -->
+    <property name="prototypeCount" value="${jdbc.initConnections}" />
+    <!-- 使用前进行测试, 防止数据库重启使用出现异常 -->
+    <property name="testBeforeUse" value="true" />
+    <!-- 数据库测试语句 以下语句适用于SQL SERVER 如果MYSQL用: select CURRENT_DATE SQL SERVER GETDATE() -->
+    <property name="houseKeepingTestSql" value="select CURRENT_DATE" />
+    <!-- 设置连接超时时间 15分钟 -->
+    <property name="maximumActiveTime" value="900000" />
+    <!-- #DEBUG, INFO, WARN, ERROR, FATAL. -->
+    <property name="statisticsLogLevel" value="ERROR" />
+  </bean>
+  
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="mapperLocations" value="classpath*:mybatis/*.xml" />
+    <property name="configLocation" value="classpath:mybatis-config.xml" />
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.jarvis.cache_example.common.mapper" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+  </bean>
+
+  <!--事务配置 -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+  <!-- Spring AOP config proxy-target-class="true"-->
+  <aop:config >
+    <!-- preinst 切入点 -->
+    <!-- 因为此模块中只有添加订单一个事务，所以只要对DAO进行事务代理就可以了 -->
+    <aop:pointcut id="transactionPointcut" expression="execution(* com.jarvis.cache_example.common.service..*.*(..))" />
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="transactionPointcut" />
+  </aop:config>
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="get*" read-only="true" propagation="NOT_SUPPORTED" />
+      <tx:method name="find*" read-only="true" propagation="NOT_SUPPORTED" />
+      <tx:method name="is*" read-only="true" propagation="NOT_SUPPORTED" />
+      <tx:method name="check*" read-only="true" propagation="NOT_SUPPORTED" />
+      <tx:method name="add*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="Exception" />
+      <tx:method name="insert*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="Exception" />
+      <tx:method name="update*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="Exception" />
+      <tx:method name="delete*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="Exception" />
+      <tx:method name="remove*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="Exception" />
+      <tx:method name="*" propagation="REQUIRED" isolation="REPEATABLE_READ" rollback-for="Exception" />
+    </tx:attributes>
+  </tx:advice>
+</beans>
