@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDAO userDAO;
-    
+
     @Autowired
     private UserMapper userMapper;
 
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public UserTO getUserById(Integer id) {
         return userMapper.getUserById(id);
     }
-    
+
     @Override
     public UserTO getUserById2(Integer id) {
         return userDAO.getUserById(id);

@@ -34,7 +34,7 @@ public class UserDAO {
      * @param user
      * @return
      */
-    @Cache(expire=600, key="'user'+$hash(#args)")
+    @Cache(expire=600, key="'user'+#hash(#args)")
     public List<UserTO> getUserList(UserTO user) {
         List<UserTO> list=new ArrayList<UserTO>();
         return list;

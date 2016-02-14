@@ -70,8 +70,9 @@
   <bean id="cachePointCutProxy" class="com.jarvis.cache.mybatis.CachePointCutProxy">
     <property name="cacheManager" ref="cachePointCut" />
   </bean>
-  <!-- 启动对@Aspectj的支持 true为cglib，false为jdk代理，为true的话，会导致拦截不了mybatis的mapper-->
+  <!-- proxy-target-class=false为jdk代理，为true的话，会导致拦截不了mybatis的mapper-->
   <aop:config proxy-target-class="false">
+    <!-- 拦截mybatis的mapper-->
     <aop:aspect ref="cachePointCutProxy">
       <aop:pointcut id="daoCachePointcut1"
         expression="execution(public !void com.jarvis.cache_example.common.mapper..*.*(..))" />
@@ -82,13 +83,15 @@
         expression="execution(* com.jarvis.cache_example.common.mapper..*.*(..))" />
       <aop:after-returning pointcut-ref="deleteCachePointcut1" method="deleteCache" returning="retVal"/>
     </aop:aspect>
+
   </aop:config>
-  
   <aop:config proxy-target-class="false">
+    <!-- 拦截@Cache-->
     <aop:aspect ref="cachePointCut">
       <aop:pointcut id="daoCachePointcut" expression="execution(public !void com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
       <aop:around pointcut-ref="daoCachePointcut" method="proceed" />
     </aop:aspect>
+    <!-- 拦截@CacheDelete-->
     <aop:aspect ref="cachePointCut" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
       <aop:pointcut id="deleteCachePointcut" expression="execution(* com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cacheDelete)" />
       <aop:after-returning pointcut-ref="deleteCachePointcut" method="deleteCache" returning="retVal"/>
