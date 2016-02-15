@@ -115,7 +115,7 @@
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.3.0</version>
+      <version>3.3.1</version>
     </dependency>
     <!-- for Mybatis -->
     <dependency>
@@ -142,7 +142,7 @@
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis-spring</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.4</version>
     </dependency>
     <!-- end of for Mybatis -->
     <dependency>
