@@ -22,7 +22,7 @@ public class App {
         userDAO=(UserDAO)context.getBean("userDAO");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         init();
         System.out.println("Hello World!");
 
@@ -72,7 +72,7 @@ public class App {
         thread.start();
     }
 
-    public static void test2() {
+    public static void test2() throws Exception {
         userDAO.getUserById2(100);
         UserTO user=new UserTO();
         user.setId(100);

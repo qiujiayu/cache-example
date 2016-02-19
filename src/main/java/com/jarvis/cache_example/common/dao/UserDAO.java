@@ -53,16 +53,16 @@ public class UserDAO {
         System.out.println("getUserById from dao");
         return user;
     }
-    
+
     /**
      * 使用自定义缓存Key，并在指定的条件下才进行缓存。
      * @param id
      * @return
      */
-    @Cache(expire=600, autoload=true, key="'user_dao_getUserById2'+#args[0]", condition="#args[0]>0")
-    public UserTO getUserById2(Integer id) {
+    @Cache(expire=600, autoload=false, key="'user_dao_getUserById2'+#args[0]", condition="#args[0]>0")
+    public UserTO getUserById2(Integer id) throws Exception {
         Thread thread=Thread.currentThread();
-        System.out.println("thread:"+thread.getName()+";getUserById2");
+        System.out.println("thread:" + thread.getName() + ";getUserById2");
         try {
             // 模拟阻塞
             Thread.sleep(100);
@@ -72,10 +72,11 @@ public class UserDAO {
         UserTO user=new UserTO();
         user.setId(id);
         user.setName("name" + id);
+        // throw new Exception("test");// 异常情况测试
         return user;
     }
-    
- // 注意：因为没有用 SpEL表达式，所以不需要用单引号
+
+    // 注意：因为没有用 SpEL表达式，所以不需要用单引号
     @CacheDelete({@CacheDeleteKey(value="'user_dao_getUserById2'+#args[0]", condition="#args[0]>0")})
     public void clearUserById2Cache(Integer id) {
         System.out.println("clearUserById2Cache");

@@ -44,9 +44,16 @@ public class WaitTest implements Runnable {
 
     @Override
     public void run() {
-        UserTO user=this.userDAO.getUserById2(100);
-        Thread thread=Thread.currentThread();
-        System.out.println(thread.getName() + "     finished  "+user.getName());
+        UserTO user=null;
+        try {
+            user=this.userDAO.getUserById2(100);
+            Thread thread=Thread.currentThread();
+            System.out.println(thread.getName() + "     finished  " + user.getName());
+        } catch(Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         count.countDown();
     }
 
