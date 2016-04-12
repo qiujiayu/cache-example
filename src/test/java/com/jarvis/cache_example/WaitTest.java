@@ -8,6 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.jarvis.cache_example.common.dao.UserDAO;
 import com.jarvis.cache_example.common.to.UserTO;
 
+
 public class WaitTest implements Runnable {
 
     private ApplicationContext applicationContext=null;

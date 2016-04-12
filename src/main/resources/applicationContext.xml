@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
-  xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
    http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-3.0.xsd
@@ -48,7 +47,6 @@
       </list>
     </constructor-arg>
   </bean>
-  
   <bean id="autoLoadConfig" class="com.jarvis.cache.to.AutoLoadConfig">
     <property name="threadCnt" value="10" />
     <property name="maxElement" value="20000" />
@@ -57,8 +55,12 @@
     <property name="sortType" value="1" />
     <property name="checkFromCacheBeforeLoad" value="true" />
     <property name="autoLoadPeriod" value="50" />
+    <property name="functions">
+      <map>
+        <entry key="isEmpty" value="com.jarvis.cache.CacheUtil" />
+      </map>
+    </property>
   </bean>
- 
   <bean id="hessianSerializer" class="com.jarvis.cache.serializer.HessianSerializer" />
   <bean id="cachePointCut" class="com.jarvis.cache.redis.ShardedCachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
@@ -70,31 +72,28 @@
   <bean id="cachePointCutProxy" class="com.jarvis.cache.mybatis.CachePointCutProxy">
     <property name="cacheManager" ref="cachePointCut" />
   </bean>
-  <!-- proxy-target-class=false为jdk代理，为true的话，会导致拦截不了mybatis的mapper-->
+  <!-- proxy-target-class=false为jdk代理，为true的话，会导致拦截不了mybatis的mapper -->
   <aop:config proxy-target-class="false">
-    <!-- 拦截mybatis的mapper-->
+    <!-- 拦截mybatis的mapper -->
     <aop:aspect ref="cachePointCutProxy">
-      <aop:pointcut id="daoCachePointcut1"
-        expression="execution(public !void com.jarvis.cache_example.common.mapper..*.*(..))" />
+      <aop:pointcut id="daoCachePointcut1" expression="execution(public !void com.jarvis.cache_example.common.mapper..*.*(..))" />
       <aop:around pointcut-ref="daoCachePointcut1" method="proceed" />
     </aop:aspect>
     <aop:aspect ref="cachePointCutProxy" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
-      <aop:pointcut id="deleteCachePointcut1"
-        expression="execution(* com.jarvis.cache_example.common.mapper..*.*(..))" />
-      <aop:after-returning pointcut-ref="deleteCachePointcut1" method="deleteCache" returning="retVal"/>
+      <aop:pointcut id="deleteCachePointcut1" expression="execution(* com.jarvis.cache_example.common.mapper..*.*(..))" />
+      <aop:after-returning pointcut-ref="deleteCachePointcut1" method="deleteCache" returning="retVal" />
     </aop:aspect>
-
   </aop:config>
   <aop:config proxy-target-class="false">
-    <!-- 拦截@Cache-->
+    <!-- 拦截@Cache -->
     <aop:aspect ref="cachePointCut">
       <aop:pointcut id="daoCachePointcut" expression="execution(public !void com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cache)" />
       <aop:around pointcut-ref="daoCachePointcut" method="proceed" />
     </aop:aspect>
-    <!-- 拦截@CacheDelete-->
+    <!-- 拦截@CacheDelete -->
     <aop:aspect ref="cachePointCut" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
       <aop:pointcut id="deleteCachePointcut" expression="execution(* com.jarvis.cache_example.common.dao..*.*(..)) &amp;&amp; @annotation(cacheDelete)" />
-      <aop:after-returning pointcut-ref="deleteCachePointcut" method="deleteCache" returning="retVal"/>
+      <aop:after-returning pointcut-ref="deleteCachePointcut" method="deleteCache" returning="retVal" />
     </aop:aspect>
   </aop:config>
   <bean id="userDAO" class="com.jarvis.cache_example.common.dao.UserDAO" />
