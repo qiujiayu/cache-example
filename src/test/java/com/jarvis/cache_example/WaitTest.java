@@ -5,57 +5,73 @@ import java.util.concurrent.CountDownLatch;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import redis.clients.jedis.Client;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
+
 import com.jarvis.cache_example.common.dao.UserDAO;
 import com.jarvis.cache_example.common.to.UserTO;
 
+public class WaitTest {
+ 
+    private static ApplicationContext applicationContext=null;
 
-public class WaitTest implements Runnable {
-
-    private ApplicationContext applicationContext=null;
-
-    private UserDAO userDAO;
-
-    private CountDownLatch count;
+    private static UserDAO userDAO;
 
     public static void main(String[] args) {
         String[] tmp=new String[]{"applicationContext.xml", "datasource-config.xml"};
-        WaitTest t=new WaitTest();
-        t.applicationContext=new ClassPathXmlApplicationContext(tmp);
-        t.userDAO=t.applicationContext.getBean(UserDAO.class);
+        applicationContext=new ClassPathXmlApplicationContext(tmp);
+        userDAO=applicationContext.getBean(UserDAO.class);
         try {
             Thread.sleep(1000);
         } catch(InterruptedException e1) {
             e1.printStackTrace();
         }
-        t.userDAO.clearUserById2Cache(100);
+        testShardedJedisPool();
+    }
+    
+    private static void testShardedJedisPool(){
+        ShardedJedisPool shardedJedisPool=(ShardedJedisPool)applicationContext.getBean("shardedJedisPool");
+        for(int i=0;i<100;i++){
+            String key="key_"+i+";";
+            ShardedJedis shardedJedis=shardedJedisPool.getResource();
+            Jedis jedis=shardedJedis.getShard(key);
+            Client client=jedis.getClient();
+            System.out.println(key+"---->"+client.getHost()+":"+client.getPort());
+        }
+    }
+
+    private static void countDownTest() {
         int threadCnt=10;
-        t.count=new CountDownLatch(threadCnt);
+        userDAO.clearUserById2Cache(100);
+        final CountDownLatch count=new CountDownLatch(threadCnt);
         for(int i=0; i < threadCnt; i++) {
-            Thread thread=new Thread(t, "thread" + i);
+            Thread thread=new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    UserTO user=null;
+                    try {
+                        user=userDAO.getUserById2(100);
+                        Thread thread=Thread.currentThread();
+                        System.out.println(thread.getName() + "     finished  " + user.getName());
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    count.countDown();
+                }
+            }, "thread" + i);
             thread.start();
         }
         try {
-            t.count.await();
+            count.await();
         } catch(InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        t.userDAO.clearUserById2Cache(100);
+        userDAO.clearUserById2Cache(100);
     }
-
-    @Override
-    public void run() {
-        UserTO user=null;
-        try {
-            user=this.userDAO.getUserById2(100);
-            Thread thread=Thread.currentThread();
-            System.out.println(thread.getName() + "     finished  " + user.getName());
-        } catch(Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        count.countDown();
-    }
+    
 
 }

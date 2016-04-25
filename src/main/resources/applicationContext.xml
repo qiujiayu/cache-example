@@ -32,17 +32,17 @@
         <bean class="redis.clients.jedis.JedisShardInfo">
           <constructor-arg value="${redis1.host}" />
           <constructor-arg type="int" value="${redis1.port}" />
-          <constructor-arg value="instance:01" />
+          <constructor-arg value="${redis1.host}:${redis1.port}" />
         </bean>
         <bean class="redis.clients.jedis.JedisShardInfo">
           <constructor-arg value="${redis2.host}" />
           <constructor-arg type="int" value="${redis2.port}" />
-          <constructor-arg value="instance:02" />
+          <constructor-arg value="${redis2.host}:${redis2.port}" />
         </bean>
         <bean class="redis.clients.jedis.JedisShardInfo">
           <constructor-arg value="${redis3.host}" />
           <constructor-arg type="int" value="${redis3.port}" />
-          <constructor-arg value="instance:03" />
+          <constructor-arg value="${redis3.host}:${redis3.port}" />
         </bean>
       </list>
     </constructor-arg>
