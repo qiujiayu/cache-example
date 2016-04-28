@@ -11,13 +11,15 @@ import com.jarvis.cache.type.CacheOpType;
 import com.jarvis.cache_example.common.to.UserTO;
 
 public class UserDAO {
+
     private static final String cacheName="user";
+
     /**
      * 添加用户的同时，把数据放到缓存中
      * @param userName
      * @return
      */
-    @Cache(expire=600, key="'"+cacheName+"'+#retVal.id", opType=CacheOpType.WRITE)
+    @Cache(expire=600, key="'" + cacheName + "'+#retVal.id", opType=CacheOpType.WRITE)
     public UserTO addUser(String userName) {
         UserTO user=new UserTO();
         user.setName(userName);
@@ -26,7 +28,7 @@ public class UserDAO {
         Integer id=rand.nextInt(100000);
         user.setId(id);
         System.out.println("add User:" + id);
-        
+
         return getUserById(id);
     }
 
@@ -84,9 +86,13 @@ public class UserDAO {
         // save to db
     }
 
-    @CacheDelete({@CacheDeleteKey(value="'user'+#args[0].id")})
+    @CacheDelete({@CacheDeleteKey(value="'user'+#args[0].id", condition="null != #args[0]")})
     public void updateUserName(UserTO user) {
-        System.out.println("update user name:" + user.getName());
+        if(null != user) {
+            System.out.println("update user name:" + user.getName());
+        } else {
+            System.out.println("use is null");
+        }
         // save to db
     }
 

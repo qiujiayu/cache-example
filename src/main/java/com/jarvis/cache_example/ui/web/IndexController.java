@@ -19,7 +19,7 @@ public class IndexController {
 
     @RequestMapping("/index.html")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
-        int id=100;
+        int id=1;
         UserTO user=userService.getUserById(id);
         request.setAttribute("user", user);
         UserTO user2=userService.getUserById2(id);

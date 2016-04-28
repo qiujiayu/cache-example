@@ -14,7 +14,7 @@ import com.jarvis.cache_example.common.dao.UserDAO;
 import com.jarvis.cache_example.common.to.UserTO;
 
 public class WaitTest {
- 
+
     private static ApplicationContext applicationContext=null;
 
     private static UserDAO userDAO;
@@ -30,15 +30,15 @@ public class WaitTest {
         }
         testShardedJedisPool();
     }
-    
-    private static void testShardedJedisPool(){
+
+    private static void testShardedJedisPool() {
         ShardedJedisPool shardedJedisPool=(ShardedJedisPool)applicationContext.getBean("shardedJedisPool");
-        for(int i=0;i<100;i++){
-            String key="key_"+i+";";
+        for(int i=0; i < 100; i++) {
+            String key="key_" + i + ";";
             ShardedJedis shardedJedis=shardedJedisPool.getResource();
             Jedis jedis=shardedJedis.getShard(key);
             Client client=jedis.getClient();
-            System.out.println(key+"---->"+client.getHost()+":"+client.getPort());
+            System.out.println(key + "---->" + client.getHost() + ":" + client.getPort());
         }
     }
 
@@ -72,6 +72,5 @@ public class WaitTest {
         }
         userDAO.clearUserById2Cache(100);
     }
-    
 
 }
