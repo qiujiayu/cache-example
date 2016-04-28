@@ -56,10 +56,6 @@
   <servlet>
     <servlet-name>cacheadmin</servlet-name>
     <servlet-class>com.jarvis.cache.admin.servlet.AdminServlet</servlet-class>
-    <init-param>
-      <param-name>cacheManagerNames</param-name>
-      <param-value>cachePointCut</param-value>
-    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
