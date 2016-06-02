@@ -14,12 +14,14 @@ public class UserDAO {
 
     private static final String cacheName="user";
 
+    private static final int expire=600;
+
     /**
      * 添加用户的同时，把数据放到缓存中
      * @param userName
      * @return
      */
-    @Cache(expire=600, key="'" + cacheName + "'+#retVal.id", opType=CacheOpType.WRITE)
+    @Cache(expire=expire, key="'" + cacheName + "'+#retVal.id", opType=CacheOpType.WRITE)
     public UserTO addUser(String userName) {
         UserTO user=new UserTO();
         user.setName(userName);
@@ -37,7 +39,7 @@ public class UserDAO {
      * @param user
      * @return
      */
-    @Cache(expire=600, key="'user'+#hash(#args)")
+    @Cache(expire=expire, key="'" + cacheName + "'+#hash(#args)")
     public List<UserTO> getUserList(UserTO user) {
         List<UserTO> list=new ArrayList<UserTO>();
         return list;
