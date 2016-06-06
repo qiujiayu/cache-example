@@ -62,14 +62,17 @@
     </property>
   </bean>
   <bean id="hessianSerializer" class="com.jarvis.cache.serializer.HessianSerializer" />
-  
+  <bean id="scriptParser" class="com.jarvis.cache.script.SpringELParser" />
   <bean id="mapCacheManager" class="com.jarvis.cache.map.CachePointCut" init-method="start" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
+    <constructor-arg ref="hessianSerializer" />
+    <constructor-arg ref="scriptParser" />
     <property name="unpersistMaxSize" value="0" />
   </bean>
   <bean id="cacheManager" class="com.jarvis.cache.redis.ShardedCachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
-    <property name="serializer" ref="hessianSerializer" />
+    <constructor-arg ref="hessianSerializer" />
+    <constructor-arg ref="scriptParser" />
     <property name="shardedJedisPool" ref="shardedJedisPool" />
     <property name="namespace" value="test" />
   </bean>
