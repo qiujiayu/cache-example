@@ -67,19 +67,21 @@
     <constructor-arg value="1024" /><!-- 超过1024时进行压缩，方便测试所以设置比较小，实际项目中，需要设置大些 -->
   </bean>
   <bean id="scriptParser" class="com.jarvis.cache.script.SpringELParser" />
-  <bean id="mapCacheManager" class="com.jarvis.cache.map.CachePointCut" init-method="start" destroy-method="destroy">
+  <bean id="cacheManager" class="com.jarvis.cache.map.CachePointCut" init-method="start" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
     <constructor-arg ref="fastjsonSerializer" />
     <constructor-arg ref="scriptParser" />
     <property name="unpersistMaxSize" value="0" />
   </bean>
+  <!--  
   <bean id="cacheManager" class="com.jarvis.cache.redis.ShardedCachePointCut" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
-    <constructor-arg ref="fastjsonCompressorSerializer" />
+    <constructor-arg ref="fastjsonSerializer" />
     <constructor-arg ref="scriptParser" />
     <property name="shardedJedisPool" ref="shardedJedisPool" />
     <property name="namespace" value="test" />
   </bean>
+  -->
   <bean id="cacheInterceptor" class="com.jarvis.cache.aop.aspectj.AspectjAopInterceptor">
     <property name="cacheManager" ref="cacheManager" />
   </bean>

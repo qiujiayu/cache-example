@@ -10,6 +10,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>3.2.10.RELEASE</spring.version>
+    <autoload-cache.version>4.11-SNAPSHOT</autoload-cache.version>
   </properties>
   <build>
     <finalName>cache-example</finalName>
@@ -40,7 +41,7 @@
     <dependency>
       <groupId>com.github.qiujiayu</groupId>
       <artifactId>autoload-cache</artifactId>
-      <version>4.10</version>
+      <version>${autoload-cache.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

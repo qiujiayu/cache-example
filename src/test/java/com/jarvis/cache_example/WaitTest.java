@@ -28,7 +28,7 @@ public class WaitTest {
         } catch(InterruptedException e1) {
             e1.printStackTrace();
         }
-        testShardedJedisPool();
+        countDownTest();
     }
 
     private static void testShardedJedisPool() {

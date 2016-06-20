@@ -14,7 +14,7 @@ public class UserDAO {
 
     private static final String cacheName="user";
 
-    private static final int expire=600;
+    private static final int expire=210;
 
     /**
      * 添加用户的同时，把数据放到缓存中
@@ -50,7 +50,7 @@ public class UserDAO {
      * @param id
      * @return
      */
-    @Cache(expire=600, autoload=true, key="'user_dao_getUserById'+#args[0]", condition="#args[0]>0")
+    @Cache(expire=expire, autoload=true, key="'user_dao_getUserById'+#args[0]", condition="#args[0]>0")
     public UserTO getUserById(Integer id) {
         UserTO user=new UserTO();
         user.setId(id);
@@ -64,7 +64,7 @@ public class UserDAO {
      * @param id
      * @return
      */
-    @Cache(expire=600, autoload=false, key="'user_dao_getUserById2'+#args[0]", condition="#args[0]>0")
+    @Cache(expire=expire, autoload=false, key="'user_dao_getUserById2'+#args[0]", condition="#args[0]>0")
     public UserTO getUserById2(Integer id) throws Exception {
         Thread thread=Thread.currentThread();
         System.out.println("thread:" + thread.getName() + ";getUserById2");
