@@ -14,7 +14,7 @@ public class UserDAO {
 
     private static final String cacheName="user";
 
-    private static final int expire=210;
+    private static final int expire=121;
 
     /**
      * 添加用户的同时，把数据放到缓存中
@@ -42,6 +42,8 @@ public class UserDAO {
     @Cache(expire=expire, key="'" + cacheName + "'+#hash(#args)")
     public List<UserTO> getUserList(UserTO user) {
         List<UserTO> list=new ArrayList<UserTO>();
+        list.add(user);
+        System.out.println("getUserList from dao");
         return list;
     }
 

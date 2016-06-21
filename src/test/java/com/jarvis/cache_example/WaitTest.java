@@ -1,5 +1,6 @@
 package com.jarvis.cache_example;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import org.springframework.context.ApplicationContext;
@@ -10,6 +11,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
+import com.alibaba.fastjson.JSON;
 import com.jarvis.cache_example.common.dao.UserDAO;
 import com.jarvis.cache_example.common.to.UserTO;
 
@@ -23,12 +25,33 @@ public class WaitTest {
         String[] tmp=new String[]{"applicationContext.xml", "datasource-config.xml"};
         applicationContext=new ClassPathXmlApplicationContext(tmp);
         userDAO=applicationContext.getBean(UserDAO.class);
+        test();
         try {
-            Thread.sleep(1000);
-        } catch(InterruptedException e1) {
-            e1.printStackTrace();
+            Thread.sleep(80 * 1000);
+        } catch(InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        countDownTest();
+        test();
+        try {
+            Thread.sleep(120 * 1000);
+        } catch(InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private static void test() {
+        UserTO data=new UserTO();
+        data.setId(1);
+        data.setAge(20);
+        data.setName("test1");
+        List<UserTO> res1=userDAO.getUserList(data);
+        System.out.println("res1==" + JSON.toJSONString(res1));
+        data.setAge(30);
+        data.setName("test2");
+        List<UserTO> res2=userDAO.getUserList(data);
+        System.out.println("res2==" + JSON.toJSONString(res2));
     }
 
     private static void testShardedJedisPool() {

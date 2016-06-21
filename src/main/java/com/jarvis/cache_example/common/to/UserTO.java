@@ -36,4 +36,9 @@ public class UserTO implements Serializable {
         this.age=age;
     }
 
+    @Override
+    public String toString() {
+        return "UserTO [id=" + id + ", name=" + name + ", age=" + age + "]";
+    }
+
 }
