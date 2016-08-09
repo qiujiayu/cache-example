@@ -10,7 +10,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>3.2.10.RELEASE</spring.version>
-    <autoload-cache.version>4.11</autoload-cache.version>
+    <autoload-cache.version>4.16</autoload-cache.version>
   </properties>
   <build>
     <finalName>cache-example</finalName>
@@ -42,6 +42,16 @@
       <groupId>com.github.qiujiayu</groupId>
       <artifactId>autoload-cache</artifactId>
       <version>${autoload-cache.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.caucho</groupId>
+      <artifactId>hessian</artifactId>
+      <version>4.0.38</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

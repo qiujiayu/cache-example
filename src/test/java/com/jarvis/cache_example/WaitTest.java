@@ -6,11 +6,6 @@ import java.util.concurrent.CountDownLatch;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import redis.clients.jedis.Client;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
-
 import com.alibaba.fastjson.JSON;
 import com.jarvis.cache_example.common.dao.UserDAO;
 import com.jarvis.cache_example.common.to.UserTO;
@@ -25,6 +20,7 @@ public class WaitTest {
         String[] tmp=new String[]{"applicationContext.xml", "datasource-config.xml"};
         applicationContext=new ClassPathXmlApplicationContext(tmp);
         userDAO=applicationContext.getBean(UserDAO.class);
+        countDownTest();
         test();
         try {
             Thread.sleep(80 * 1000);
@@ -52,17 +48,6 @@ public class WaitTest {
         data.setName("test2");
         List<UserTO> res2=userDAO.getUserList(data);
         System.out.println("res2==" + JSON.toJSONString(res2));
-    }
-
-    private static void testShardedJedisPool() {
-        ShardedJedisPool shardedJedisPool=(ShardedJedisPool)applicationContext.getBean("shardedJedisPool");
-        for(int i=0; i < 100; i++) {
-            String key="key_" + i + ";";
-            ShardedJedis shardedJedis=shardedJedisPool.getResource();
-            Jedis jedis=shardedJedis.getShard(key);
-            Client client=jedis.getClient();
-            System.out.println(key + "---->" + client.getHost() + ":" + client.getPort());
-        }
     }
 
     private static void countDownTest() {
