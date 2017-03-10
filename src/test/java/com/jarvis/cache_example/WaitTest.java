@@ -21,7 +21,7 @@ public class WaitTest {
         applicationContext=new ClassPathXmlApplicationContext(tmp);
         userDAO=applicationContext.getBean(UserDAO.class);
         countDownTest();
-        test();
+        /*test();
         try {
             Thread.sleep(80 * 1000);
         } catch(InterruptedException e) {
@@ -34,7 +34,7 @@ public class WaitTest {
         } catch(InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        }*/
     }
 
     private static void test() {
@@ -51,7 +51,7 @@ public class WaitTest {
     }
 
     private static void countDownTest() {
-        int threadCnt=10;
+        int threadCnt=100;
         userDAO.clearUserById2Cache(100);
         final CountDownLatch count=new CountDownLatch(threadCnt);
         for(int i=0; i < threadCnt; i++) {
