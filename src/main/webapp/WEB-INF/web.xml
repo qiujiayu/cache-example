@@ -53,27 +53,6 @@
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>*.html</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>cacheadmin</servlet-name>
-    <servlet-class>com.jarvis.cache.admin.servlet.AdminServlet</servlet-class>
-    <init-param>
-      <param-name>user</param-name>
-      <param-value>admin</param-value>
-    </init-param>
-    <init-param>
-      <param-name>password</param-name>
-      <param-value>admin</param-value>
-    </init-param>
-    <init-param>
-      <param-name>cacheManagerConfig</param-name>
-      <param-value>com.jarvis.cache.admin.servlet.SpringCacheManagerConfig</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>cacheadmin</servlet-name>
-    <url-pattern>/cacheadmin</url-pattern>
-  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>

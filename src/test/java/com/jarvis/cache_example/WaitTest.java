@@ -20,10 +20,11 @@ public class WaitTest {
         String[] tmp=new String[]{"applicationContext.xml", "datasource-config.xml"};
         applicationContext=new ClassPathXmlApplicationContext(tmp);
         userDAO=applicationContext.getBean(UserDAO.class);
-        countDownTest();
-        /*test();
+        // countDownTest();
+        test();
+        test();
         try {
-            Thread.sleep(80 * 1000);
+            Thread.sleep(80 * 1000);// 看看异常刷新是否生效
         } catch(InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -34,7 +35,7 @@ public class WaitTest {
         } catch(InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }*/
+        }
     }
 
     private static void test() {
