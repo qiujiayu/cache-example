@@ -18,7 +18,7 @@ public class App {
      * 初始化
      */
     private static void init() {
-        context=new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});
+        context=new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml", "datasource-config.xml"});
         userDAO=(UserDAO)context.getBean("userDAO");
     }
 
