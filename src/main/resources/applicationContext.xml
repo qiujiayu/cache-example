@@ -63,19 +63,18 @@
   </bean>
   <bean id="hessianSerializer" class="com.jarvis.cache.serializer.HessianSerializer" />
   <bean id="scriptParser" class="com.jarvis.cache.script.SpringELParser" />
+  <!-- 本地缓存的例子
   <bean id="cacheManager" class="com.jarvis.cache.map.MapCacheManager" init-method="start" destroy-method="destroy">
     <constructor-arg ref="autoLoadConfig" />
     <constructor-arg ref="hessianSerializer" />
     <property name="unpersistMaxSize" value="0" />
   </bean>
-  <!-- 
+   -->
+
   <bean id="cacheManager" class="com.jarvis.cache.redis.ShardedJedisCacheManager">
-    <constructor-arg ref="autoLoadConfig" />
-    <constructor-arg ref="fastjsonSerializer" />
-    <constructor-arg ref="scriptParser" />
+    <constructor-arg ref="hessianSerializer" />
     <property name="shardedJedisPool" ref="shardedJedisPool" />
   </bean>
-   -->
   <bean id="cacheHandler" class="com.jarvis.cache.CacheHandler" destroy-method="destroy">
     <constructor-arg ref="cacheManager" />
     <constructor-arg ref="scriptParser" />
